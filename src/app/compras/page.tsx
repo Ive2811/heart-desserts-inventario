@@ -27,55 +27,66 @@ export default async function ComprasPage() {
     .limit(50)
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Compras</h1>
-          <p className="text-zinc-500 mt-2">Cada compra suma stock y actualiza el costo de tus insumos.</p>
-        </div>
-        <div className="flex gap-4">
-          <Link href="/">
-            <Button variant="outline">Volver al Panel</Button>
-          </Link>
-          <Link href="/compras/nueva">
-            <Button>Nueva compra</Button>
-          </Link>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#FDFBF7] w-full">
+      {/* CAJA EXTERIOR: Fondo crema que ocupa toda la pantalla */}
 
-      {error && (
-        <p className="text-sm text-red-500 font-medium">No se pudieron cargar las compras. Intenta recargar la página.</p>
-      )}
+      {/* CAJA INTERIOR: Centrada y con ancho máximo */}
+      <div className="max-w-5xl mx-auto p-6 md:p-10 pb-28 space-y-6">
+        
+        {/* Encabezado */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-serif font-bold text-zinc-900">Compras</h1>
+            <p className="text-sm text-zinc-500 mt-1">Cada compra suma stock y actualiza el costo de tus insumos.</p>
+          </div>
+          <div className="flex gap-3">
+            <Link href="/">
+              <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Volver al Panel</Button>
+            </Link>
+            <Link href="/compras/nueva">
+              <Button className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors border-none">Nueva compra</Button>
+            </Link>
+          </div>
+        </div>
 
-      <div className="border rounded-xl bg-white shadow-sm overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Fecha</TableHead>
-              <TableHead>Proveedor</TableHead>
-              <TableHead>Factura</TableHead>
-              <TableHead className="text-right">Total</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {compras && compras.length > 0 ? (
-              compras.map((compra) => (
-                <TableRow key={compra.id}>
-                  <TableCell className="font-medium">{formatDate(compra.purchased_on)}</TableCell>
-                  <TableCell>{compra.suppliers?.name ?? 'Sin proveedor'}</TableCell>
-                  <TableCell>{compra.invoice_number ?? '—'}</TableCell>
-                  <TableCell className="text-right font-semibold">${Number(compra.total).toFixed(2)}</TableCell>
-                </TableRow>
-              ))
-            ) : (
+        {error && (
+          <p className="text-sm text-red-500 font-medium bg-red-50 p-3 rounded-lg border border-red-100">
+            No se pudieron cargar las compras. Intenta recargar la página.
+          </p>
+        )}
+
+        {/* Tabla de Compras */}
+        <div className="border border-zinc-200 rounded-2xl bg-white shadow-sm overflow-hidden">
+          <Table>
+            <TableHeader className="bg-zinc-50/50">
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-zinc-500">
-                  Aún no hay compras registradas.
-                </TableCell>
+                <TableHead className="font-semibold text-zinc-700">Fecha</TableHead>
+                <TableHead className="font-semibold text-zinc-700">Proveedor</TableHead>
+                <TableHead className="font-semibold text-zinc-700">Factura</TableHead>
+                <TableHead className="text-right font-semibold text-zinc-700">Total</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {compras && compras.length > 0 ? (
+                compras.map((compra) => (
+                  <TableRow key={compra.id} className="hover:bg-zinc-50/50 transition-colors">
+                    <TableCell className="font-medium text-zinc-900">{formatDate(compra.purchased_on)}</TableCell>
+                    <TableCell className="text-sm text-zinc-600">{compra.suppliers?.name ?? 'Sin proveedor'}</TableCell>
+                    <TableCell className="text-sm text-zinc-600">{compra.invoice_number ?? '—'}</TableCell>
+                    <TableCell className="text-right font-semibold text-zinc-900">${Number(compra.total).toFixed(2)}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-10 text-zinc-500 text-sm">
+                    Aún no hay compras registradas.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
       </div>
     </div>
   )

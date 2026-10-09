@@ -34,51 +34,59 @@ export default async function ProductoPage({ params }: { params: Promise<{ id: s
   ])
 
   return (
-    <div className="p-8 max-w-4xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">{producto.name}</h1>
-          <p className="text-zinc-500 mt-2">
-            {producto.fulfillment === 'made_to_order' ? 'Por encargo' : 'Por tanda'} · Receta y costo
-          </p>
-        </div>
-        <Link href="/productos">
-          <Button variant="outline">Volver a Productos</Button>
-        </Link>
-      </div>
+    <div className="min-h-screen bg-[#FDFBF7] w-full">
+      {/* CAJA EXTERIOR: Fondo crema que ocupa toda la pantalla */}
 
-      {!insumos || insumos.length === 0 ? (
-        <div className="border rounded-xl bg-white shadow-sm p-8 text-center space-y-3">
-          <p className="text-zinc-500">Primero registra tus insumos para poder armar la receta.</p>
-          <Link href="/insumos">
-            <Button>Ir a Insumos</Button>
+      {/* CAJA INTERIOR: Centrada y con ancho máximo */}
+      <div className="max-w-4xl mx-auto p-6 md:p-10 pb-28 space-y-6">
+        
+        {/* Encabezado */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-serif font-bold text-zinc-900">{producto.name}</h1>
+            <p className="text-sm text-zinc-500 mt-1">
+              {producto.fulfillment === 'made_to_order' ? 'Por encargo' : 'Por tanda'} · Receta y costo
+            </p>
+          </div>
+          <Link href="/productos">
+            <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Volver a productos</Button>
           </Link>
         </div>
-      ) : (
-        <RecetaEditor
-          productoId={producto.id}
-          precio={producto.sale_price === null ? null : Number(producto.sale_price)}
-          insumos={insumos.map((i) => ({
-            id: i.id,
-            name: i.name,
-            base_unit: i.base_unit,
-            avg_cost: Number(i.avg_cost),
-          }))}
-          inicial={
-            receta
-              ? {
-                  yield_portions: receta.yield_portions,
-                  notes: receta.notes ?? '',
-                  items: receta.recipe_items.map((it) => ({
-                    ingredient_id: it.ingredient_id,
-                    quantity: Number(it.quantity),
-                    waste_pct: Number(it.waste_pct),
-                  })),
-                }
-              : null
-          }
-        />
-      )}
+
+        {!insumos || insumos.length === 0 ? (
+          <div className="border border-zinc-200 rounded-2xl bg-white shadow-sm p-8 text-center space-y-3">
+            <p className="text-zinc-500 text-sm">Primero registra tus insumos para poder armar la receta.</p>
+            <Link href="/insumos">
+              <Button className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">Ir a Insumos</Button>
+            </Link>
+          </div>
+        ) : (
+          <RecetaEditor
+            productoId={producto.id}
+            precio={producto.sale_price === null ? null : Number(producto.sale_price)}
+            insumos={insumos.map((i) => ({
+              id: i.id,
+              name: i.name,
+              base_unit: i.base_unit,
+              avg_cost: Number(i.avg_cost),
+            }))}
+            inicial={
+              receta
+                ? {
+                    yield_portions: receta.yield_portions,
+                    notes: receta.notes ?? '',
+                    items: receta.recipe_items.map((it) => ({
+                      ingredient_id: it.ingredient_id,
+                      quantity: Number(it.quantity),
+                      waste_pct: Number(it.waste_pct),
+                    })),
+                  }
+                : null
+            }
+          />
+        )}
+
+      </div>
     </div>
   )
 }

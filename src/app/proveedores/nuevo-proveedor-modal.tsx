@@ -39,33 +39,47 @@ export function NuevoProveedorModal() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button>Agregar Proveedor</Button>} />
-      <DialogContent className="sm:max-w-[425px]">
+      {/* Botón que abre el modal (Corregido para evitar el error de TypeScript) */}
+      <DialogTrigger render={
+        <Button className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors shadow-sm border-none">
+          Agregar Proveedor
+        </Button>
+      } />
+      
+      {/* Contenido del Modal */}
+      <DialogContent className="sm:max-w-[425px] rounded-2xl bg-white border border-zinc-200 p-6 shadow-lg">
         <DialogHeader>
-          <DialogTitle>Registrar Nuevo Proveedor</DialogTitle>
-          <DialogDescription>Podrás elegirlo al registrar tus compras.</DialogDescription>
+          <DialogTitle className="text-2xl font-serif font-bold text-zinc-900">Registrar Nuevo Proveedor</DialogTitle>
+          <DialogDescription className="text-zinc-500 mt-1">
+            Podrás elegirlo al registrar tus compras.
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+        
+        <form onSubmit={handleSubmit} className="space-y-5 mt-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Nombre</Label>
-            <Input id="name" name="name" maxLength={120} placeholder="ej. Distribuidora La Esperanza" required />
+            <Label htmlFor="name" className="text-zinc-700 font-semibold">Nombre</Label>
+            <Input id="name" name="name" maxLength={120} placeholder="ej. Distribuidora La Esperanza" required className="h-10 focus-visible:ring-[#B83B5E]" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone">Teléfono (opcional)</Label>
-            <Input id="phone" name="phone" maxLength={30} inputMode="tel" />
+            <Label htmlFor="phone" className="text-zinc-700 font-semibold">Teléfono (opcional)</Label>
+            <Input id="phone" name="phone" maxLength={30} inputMode="tel" className="h-10 focus-visible:ring-[#B83B5E]" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="notes">Nota (opcional)</Label>
-            <Input id="notes" name="notes" maxLength={300} placeholder="ej. entrega los martes" />
+            <Label htmlFor="notes" className="text-zinc-700 font-semibold">Nota (opcional)</Label>
+            <Input id="notes" name="notes" maxLength={300} placeholder="ej. entrega los martes" className="h-10 focus-visible:ring-[#B83B5E]" />
           </div>
 
-          {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
+          {error && (
+            <p className="text-sm text-red-500 font-medium bg-red-50 p-3 rounded-lg border border-red-100">
+              {error}
+            </p>
+          )}
 
-          <div className="flex justify-end gap-3 pt-4">
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+          <div className="flex justify-end gap-3 pt-6 border-t border-zinc-100">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} className="hover:bg-zinc-50 transition-colors">
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">
               {loading ? 'Guardando...' : 'Guardar Proveedor'}
             </Button>
           </div>

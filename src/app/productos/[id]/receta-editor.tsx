@@ -24,7 +24,7 @@ type Line = { key: number; ingredient_id: string; quantity: string; waste_pct: s
 const UNIT_LABEL: Record<BaseUnit, string> = { g: 'g', ml: 'ml', unit: 'unidades' }
 
 const selectClass =
-  'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+  'flex h-10 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#B83B5E] disabled:cursor-not-allowed disabled:opacity-50'
 
 function money(value: number, decimals = 2) {
   return `$${new Intl.NumberFormat('es-SV', {
@@ -82,7 +82,7 @@ export function RecetaEditor({
     setLines((prev) => (prev.length > 1 ? prev.filter((l) => l.key !== key) : prev))
   }
 
-  // Costos en vivo (con el costo promedio actual de cada insumo)
+  // Costos en vivo
   const portions = Number(yieldPortions)
   const lineCost = (l: Line) => {
     const insumo = byId.get(l.ingredient_id)
@@ -130,9 +130,10 @@ export function RecetaEditor({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="border rounded-xl bg-white shadow-sm p-6 grid gap-4 md:grid-cols-2">
+      {/* Datos Principales */}
+      <div className="border border-zinc-200 rounded-2xl bg-white shadow-sm p-6 grid gap-5 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="yield">¿Cuántas porciones rinde la receta?</Label>
+          <Label htmlFor="yield" className="text-zinc-700 font-semibold">¿Cuántas porciones rinde la receta?</Label>
           <Input
             id="yield"
             type="number"
@@ -144,11 +145,12 @@ export function RecetaEditor({
               setSaved(false)
               setYieldPortions(e.target.value)
             }}
+            className="h-10 focus-visible:ring-[#B83B5E]"
           />
           <p className="text-xs text-zinc-500">Escribe las cantidades para toda la receta; el sistema divide entre las porciones.</p>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="notes">Nota (opcional)</Label>
+          <Label htmlFor="notes" className="text-zinc-700 font-semibold">Nota (opcional)</Label>
           <Input
             id="notes"
             maxLength={500}
@@ -157,25 +159,27 @@ export function RecetaEditor({
               setSaved(false)
               setNotes(e.target.value)
             }}
+            className="h-10 focus-visible:ring-[#B83B5E]"
           />
         </div>
       </div>
 
+      {/* Líneas de Ingredientes */}
       <div className="space-y-4">
         {lines.map((line, index) => {
           const insumo = byId.get(line.ingredient_id)
           return (
-            <div key={line.key} className="border rounded-xl bg-white shadow-sm p-6 space-y-4">
+            <div key={line.key} className="border border-zinc-200 rounded-2xl bg-white shadow-sm p-6 space-y-5">
               <div className="flex justify-between items-center">
-                <h2 className="font-semibold">Ingrediente {index + 1}</h2>
-                <Button type="button" variant="outline" size="sm" onClick={() => removeLine(line.key)} disabled={lines.length === 1}>
+                <h2 className="font-semibold text-zinc-900">Ingrediente {index + 1}</h2>
+                <Button type="button" variant="ghost" size="sm" onClick={() => removeLine(line.key)} disabled={lines.length === 1} className="text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors">
                   Quitar
                 </Button>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-5 md:grid-cols-3">
                 <div className="space-y-2 md:col-span-3">
-                  <Label htmlFor={`ing-${line.key}`}>Insumo</Label>
+                  <Label htmlFor={`ing-${line.key}`} className="text-zinc-700 font-semibold">Insumo</Label>
                   <select
                     id={`ing-${line.key}`}
                     className={selectClass}
@@ -193,7 +197,7 @@ export function RecetaEditor({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`qty-${line.key}`}>Cantidad{insumo ? ` (${UNIT_LABEL[insumo.base_unit]})` : ''}</Label>
+                  <Label htmlFor={`qty-${line.key}`} className="text-zinc-700 font-semibold">Cantidad{insumo ? ` (${UNIT_LABEL[insumo.base_unit]})` : ''}</Label>
                   <Input
                     id={`qty-${line.key}`}
                     type="number"
@@ -203,11 +207,12 @@ export function RecetaEditor({
                     required
                     value={line.quantity}
                     onChange={(e) => updateLine(line.key, { quantity: e.target.value })}
+                    className="h-10 focus-visible:ring-[#B83B5E]"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`waste-${line.key}`}>Desperdicio (%)</Label>
+                  <Label htmlFor={`waste-${line.key}`} className="text-zinc-700 font-semibold">Desperdicio (%)</Label>
                   <Input
                     id={`waste-${line.key}`}
                     type="number"
@@ -217,48 +222,50 @@ export function RecetaEditor({
                     step="any"
                     value={line.waste_pct}
                     onChange={(e) => updateLine(line.key, { waste_pct: e.target.value })}
+                    className="h-10 focus-visible:ring-[#B83B5E]"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Costo de esta línea</Label>
-                  <p className="h-9 flex items-center font-semibold">{money(lineCost(line), 4)}</p>
+                  <Label className="text-zinc-700 font-semibold">Costo de esta línea</Label>
+                  <p className="h-10 flex items-center font-semibold text-zinc-900">{money(lineCost(line), 4)}</p>
                 </div>
               </div>
             </div>
           )
         })}
 
-        <Button type="button" variant="outline" onClick={addLine}>
+        <Button type="button" variant="outline" onClick={addLine} className="w-full border-dashed border-2 hover:bg-zinc-50 hover:text-[#B83B5E] hover:border-rose-200 transition-colors">
           + Agregar otro ingrediente
         </Button>
       </div>
 
-      <div className="border rounded-xl bg-white shadow-sm p-6 space-y-1">
-        <p>
-          Costo de la receta: <span className="font-bold">{money(totalCost)}</span>
+      {/* Tarjeta de Totales y Márgenes en Vivo */}
+      <div className="border border-zinc-200 rounded-2xl bg-white shadow-sm p-6 space-y-2 text-zinc-700">
+        <p className="text-base">
+          Costo de la receta: <span className="font-serif font-bold text-xl text-zinc-900 ml-1">{money(totalCost)}</span>
         </p>
-        <p>
-          Costo por porción: <span className="font-bold">{money(unitCost)}</span>
-          {precio !== null && <span className="text-zinc-500"> · precio de venta {money(precio)}</span>}
+        <p className="text-base">
+          Costo por porción: <span className="font-serif font-bold text-xl text-zinc-900 ml-1">{money(unitCost)}</span>
+          {precio !== null && <span className="text-zinc-500 text-sm ml-2">· precio de venta {money(precio)}</span>}
         </p>
         {margin !== null && (
-          <p>
-            Margen: <span className="font-bold">{margin.toFixed(1)} %</span>
+          <p className="text-base">
+            Margen: <span className={`font-bold ml-1 ${margin > 50 ? 'text-emerald-600' : 'text-amber-600'}`}>{margin.toFixed(1)} %</span>
           </p>
         )}
         {sinCosto && (
-          <p className="text-sm text-amber-700">
+          <p className="text-sm text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-100 mt-2">
             Algún insumo todavía no tiene costo: registra una compra para que el costo sea real.
           </p>
         )}
       </div>
 
-      {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
-      {saved && <p className="text-sm text-green-700 font-medium">Receta guardada.</p>}
+      {error && <p className="text-sm text-red-500 font-medium bg-red-50 p-3 rounded-lg border border-red-100">{error}</p>}
+      {saved && <p className="text-sm text-emerald-700 font-medium bg-emerald-50 p-3 rounded-lg border border-emerald-100">Receta guardada exitosamente.</p>}
 
-      <div className="flex justify-end border-t pt-4">
-        <Button type="submit" disabled={isPending}>
+      <div className="flex justify-end border-t border-zinc-100 pt-6">
+        <Button type="submit" disabled={isPending} className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">
           {isPending ? 'Guardando...' : 'Guardar receta'}
         </Button>
       </div>
