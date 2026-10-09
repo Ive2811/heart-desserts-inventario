@@ -25,7 +25,7 @@ export default async function DashboardPage() {
         </form>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <div className="rounded-xl border bg-card text-card-foreground shadow p-6 flex flex-col justify-between">
           <div>
             <h3 className="font-semibold leading-none tracking-tight">Inventario</h3>
@@ -45,6 +45,28 @@ export default async function DashboardPage() {
           <div className="mt-6">
             <Link href="/compras" className="text-sm font-medium text-blue-600 hover:text-blue-800">
               Ir a compras &rarr;
+            </Link>
+          </div>
+        </div>
+        <div className="rounded-xl border bg-card text-card-foreground shadow p-6 flex flex-col justify-between">
+          <div>
+            <h3 className="font-semibold leading-none tracking-tight">Productos</h3>
+            <p className="text-sm text-zinc-500 mt-2">Recetas, costos y márgenes</p>
+          </div>
+          <div className="mt-6">
+            <Link href="/productos" className="text-sm font-medium text-blue-600 hover:text-blue-800">
+              Ir a productos &rarr;
+            </Link>
+          </div>
+        </div>
+        <div className="rounded-xl border bg-card text-card-foreground shadow p-6 flex flex-col justify-between">
+          <div>
+            <h3 className="font-semibold leading-none tracking-tight">Proveedores</h3>
+            <p className="text-sm text-zinc-500 mt-2">A quién le compras tus insumos</p>
+          </div>
+          <div className="mt-6">
+            <Link href="/proveedores" className="text-sm font-medium text-blue-600 hover:text-blue-800">
+              Ir a proveedores &rarr;
             </Link>
           </div>
         </div>
