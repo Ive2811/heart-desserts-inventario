@@ -11,10 +11,24 @@ import {
 } from "@/components/ui/table"
 import Link from 'next/link'
 
+async function checkIsOwner() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return false
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role, active')
+    .eq('id', user.id)
+    .single()
+
+  return profile?.active && profile?.role === 'owner'
+}
+
 export default async function InsumosPage() {
   const supabase = await createClient()
+  const isOwner = await checkIsOwner()
 
-  // Consultamos tu tabla real 'ingredients' ordenada por nombre alfabéticamente
   const { data: insumos, error } = await supabase
     .from('ingredients')
     .select('*')
@@ -37,7 +51,7 @@ export default async function InsumosPage() {
             <Link href="/">
               <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Volver al Panel</Button>
             </Link>
-            <NuevoInsumoModal/>
+            {isOwner && <NuevoInsumoModal />}
           </div>
         </div>
 
