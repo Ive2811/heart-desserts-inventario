@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
 export async function getCurrentUserRole() {
@@ -18,4 +19,9 @@ export async function getCurrentUserRole() {
 export async function checkIsOwner() {
   const role = await getCurrentUserRole()
   return role === 'owner'
+}
+
+// Segunda barrera dentro de las páginas (la primera es el proxy): si no es administrador, vuelve al inicio
+export async function requireOwner() {
+  if (!(await checkIsOwner())) redirect('/')
 }

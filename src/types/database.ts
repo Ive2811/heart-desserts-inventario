@@ -213,14 +213,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "active": boolean,"created_at": string,"full_name": string,"id": string,"role": Database["public"]['Enums']["user_role"],"updated_at": string
+                    "active": boolean,"created_at": string,"full_name": string,"id": string,"permissions": string[],"role": Database["public"]['Enums']["user_role"],"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "active"?: boolean,"created_at"?: string,"full_name"?: string,"id": string,"role"?: Database["public"]['Enums']["user_role"],"updated_at"?: string
+                    "active"?: boolean,"created_at"?: string,"full_name"?: string,"id": string,"permissions"?: string[],"role"?: Database["public"]['Enums']["user_role"],"updated_at"?: string
                   }
                   Update: {
-                    "active"?: boolean,"created_at"?: string,"full_name"?: string,"id"?: string,"role"?: Database["public"]['Enums']["user_role"],"updated_at"?: string
+                    "active"?: boolean,"created_at"?: string,"full_name"?: string,"id"?: string,"permissions"?: string[],"role"?: Database["public"]['Enums']["user_role"],"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -381,14 +381,56 @@ isOneToOne: false
                   ]
                 },"sales": {
                   Row: {
-                    "cancel_reason": string | null,"cancelled_at": string | null,"cancelled_by": string | null,"channel": Database["public"]['Enums']["sale_channel"],"created_by": string,"customer_name": string | null,"customer_nit": string | null,"customer_nrc": string | null,"id": string,"invoice_doc_number": string | null,"invoice_doc_type": Database["public"]['Enums']["invoice_type"],"note": string | null,"sold_at": string,"status": Database["public"]['Enums']["sale_status"],"total": number
+                    "cancel_reason": string | null,"cancelled_at": string | null,"cancelled_by": string | null,"channel": string,"created_by": string,"customer_name": string | null,"customer_nit": string | null,"customer_nrc": string | null,"id": string,"invoice_doc_number": string | null,"invoice_doc_type": Database["public"]['Enums']["invoice_type"],"note": string | null,"payment_method": string,"sold_at": string,"status": Database["public"]['Enums']["sale_status"],"total": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"channel"?: Database["public"]['Enums']["sale_channel"],"created_by"?: string,"customer_name"?: string | null,"customer_nit"?: string | null,"customer_nrc"?: string | null,"id"?: string,"invoice_doc_number"?: string | null,"invoice_doc_type"?: Database["public"]['Enums']["invoice_type"],"note"?: string | null,"sold_at"?: string,"status"?: Database["public"]['Enums']["sale_status"],"total"?: number
+                    "cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"channel"?: string,"created_by"?: string,"customer_name"?: string | null,"customer_nit"?: string | null,"customer_nrc"?: string | null,"id"?: string,"invoice_doc_number"?: string | null,"invoice_doc_type"?: Database["public"]['Enums']["invoice_type"],"note"?: string | null,"payment_method"?: string,"sold_at"?: string,"status"?: Database["public"]['Enums']["sale_status"],"total"?: number
                   }
                   Update: {
-                    "cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"channel"?: Database["public"]['Enums']["sale_channel"],"created_by"?: string,"customer_name"?: string | null,"customer_nit"?: string | null,"customer_nrc"?: string | null,"id"?: string,"invoice_doc_number"?: string | null,"invoice_doc_type"?: Database["public"]['Enums']["invoice_type"],"note"?: string | null,"sold_at"?: string,"status"?: Database["public"]['Enums']["sale_status"],"total"?: number
+                    "cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"channel"?: string,"created_by"?: string,"customer_name"?: string | null,"customer_nit"?: string | null,"customer_nrc"?: string | null,"id"?: string,"invoice_doc_number"?: string | null,"invoice_doc_type"?: Database["public"]['Enums']["invoice_type"],"note"?: string | null,"payment_method"?: string,"sold_at"?: string,"status"?: Database["public"]['Enums']["sale_status"],"total"?: number
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"business_settings": {
+                  Row: {
+                    "business_name": string,"currency_symbol": string,"enabled_modules": Json,"id": boolean,"logo_url": string,"tagline": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_name"?: string,"currency_symbol"?: string,"enabled_modules"?: Json,"id"?: boolean,"logo_url"?: string,"tagline"?: string,"updated_at"?: string
+                  }
+                  Update: {
+                    "business_name"?: string,"currency_symbol"?: string,"enabled_modules"?: Json,"id"?: boolean,"logo_url"?: string,"tagline"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"cash_closings": {
+                  Row: {
+                    "business_date": string,"card_sales": number,"cash_counted": number,"cash_sales": number,"closed_at": string,"closed_by": string,"difference": number,"expected_cash": number,"id": string,"note": string | null,"opening_float": number,"transfer_sales": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "business_date": string,"card_sales": number,"cash_counted": number,"cash_sales": number,"closed_at"?: string,"closed_by"?: string,"difference": number,"expected_cash": number,"id"?: string,"note"?: string | null,"opening_float": number,"transfer_sales": number
+                  }
+                  Update: {
+                    "business_date"?: string,"card_sales"?: number,"cash_counted"?: number,"cash_sales"?: number,"closed_at"?: string,"closed_by"?: string,"difference"?: number,"expected_cash"?: number,"id"?: string,"note"?: string | null,"opening_float"?: number,"transfer_sales"?: number
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"sale_channels": {
+                  Row: {
+                    "active": boolean,"code": string,"created_at": string,"label": string,"sort_order": number,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active"?: boolean,"code": string,"created_at"?: string,"label": string,"sort_order"?: number,"updated_at"?: string
+                  }
+                  Update: {
+                    "active"?: boolean,"code"?: string,"created_at"?: string,"label"?: string,"sort_order"?: number,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -450,7 +492,7 @@ isOneToOne: false
 { Args: { "p_note": string,"p_portions": number,"p_product_id": string,"p_ref_id": string,"p_ref_type": string,"p_type": Database["public"]['Enums']["movement_type"] }; Returns: number
                            },
 "adjust_ingredient":
-{ Args: { "p_delta": number,"p_ingredient_id": string,"p_note"?: string,"p_reason": string,"p_type": Database["public"]['Enums']["movement_type"] }; Returns: undefined
+{ Args: { "p_delta": number,"p_ingredient_id": string,"p_note"?: string,"p_reason"?: string,"p_reason_code"?: string,"p_type": Database["public"]['Enums']["movement_type"] }; Returns: undefined
                            },
 "cancel_sale":
 { Args: { "p_reason": string,"p_sale_id": string }; Returns: undefined
@@ -468,11 +510,17 @@ isOneToOne: false
 { Args: { "p_note"?: string,"p_portions": number,"p_product_id": string }; Returns: string
                            },
 "register_sale":
-{ Args: { "p_channel": Database["public"]['Enums']["sale_channel"],"p_customer_name": string,"p_items": Json,"p_note": string }; Returns: string
+{ Args: { "p_channel": string,"p_customer_name": string,"p_customer_nit"?: string,"p_customer_nrc"?: string,"p_invoice_doc_number"?: string,"p_invoice_doc_type"?: Database["public"]['Enums']["invoice_type"],"p_items": Json,"p_note": string,"p_payment_method"?: string,"p_tax_details"?: Json }; Returns: string
+                           },
+"cash_day_summary":
+{ Args: { "p_date": string }; Returns: { cancelled_count: number,card_sales: number,cash_sales: number,sales_count: number,transfer_sales: number }[]
+                           },
+"register_cash_closing":
+{ Args: { "p_cash_counted": number,"p_date": string,"p_note"?: string,"p_opening_float": number }; Returns: string
                            }
           }
           Enums: {
-            "base_unit": "g"|"ml"|"unit","fulfillment_mode": "made_to_stock"|"made_to_order","invoice_type": "ticket"|"fcf"|"ccf"|"export","movement_type": "purchase"|"production"|"sale"|"waste"|"adjustment"|"reversal","sale_channel": "local"|"whatsapp"|"instagram"|"other","sale_status": "completed"|"cancelled","user_role": "owner"|"staff"
+            "base_unit": "g"|"ml"|"unit","fulfillment_mode": "made_to_stock"|"made_to_order","invoice_type": "ticket"|"fcf"|"ccf"|"export","movement_type": "purchase"|"production"|"sale"|"waste"|"adjustment"|"reversal","sale_status": "completed"|"cancelled","user_role": "owner"|"staff"
           }
           CompositeTypes: {
             [_ in never]: never
