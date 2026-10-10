@@ -1,5 +1,7 @@
 'use client'
 
+import { useBusiness } from '@/components/business-provider'
+import { Spinner } from '@/components/ui/spinner'
 import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { createPurchase } from '../actions'
@@ -56,6 +58,7 @@ export function NuevaCompraForm({
   proveedores: ProveedorOption[]
   today: string
 }) {
+  const { currency_symbol } = useBusiness()
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const nextKey = useRef(2)
@@ -105,15 +108,15 @@ export function NuevaCompraForm({
       const total_cost = l.total_cost === '' ? NaN : Number(l.total_cost)
       
       if (!l.ingredient_id) {
-        toast.error(`Falta seleccionar el insumo en la Línea ${index + 1}.`)
+        toast.error(`Falta seleccionar el insumo en la línea ${index + 1}.`)
         return
       }
       if (!Number.isFinite(quantity) || quantity <= 0) {
-        toast.error(`La cantidad en la Línea ${index + 1} debe ser mayor a cero.`)
+        toast.error(`La cantidad en la línea ${index + 1} debe ser mayor a cero.`)
         return
       }
       if (!Number.isFinite(total_cost) || total_cost < 0) {
-        toast.error(`Escribe el total pagado en la Línea ${index + 1}.`)
+        toast.error(`Escribe el total pagado en la línea ${index + 1}.`)
         return
       }
       
@@ -225,7 +228,7 @@ export function NuevaCompraForm({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor={`cost-${line.key}`} className="text-zinc-700 font-semibold">Total pagado ($)</Label>
+                  <Label htmlFor={`cost-${line.key}`} className="text-zinc-700 font-semibold">Total pagado ({currency_symbol})</Label>
                   <Input
                     id={`cost-${line.key}`}
                     type="number"
@@ -260,7 +263,7 @@ export function NuevaCompraForm({
                     {cost > 0 && (
                       <>
                         {' '}· costo por {insumo.base_unit === 'unit' ? 'unidad' : insumo.base_unit}:{' '}
-                        <span className="font-semibold text-[#B83B5E]">${formatNumber(cost / baseQty, 4)}</span>
+                        <span className="font-semibold text-[#B83B5E]">{currency_symbol}{formatNumber(cost / baseQty, 4)}</span>
                       </>
                     )}
                   </p>
@@ -278,10 +281,10 @@ export function NuevaCompraForm({
       {/* Pie con Total y Botón Guardar */}
       <div className="flex flex-col md:flex-row md:justify-between items-center gap-4 bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm">
         <div className="text-lg text-zinc-700">
-          Total de la compra: <span className="font-serif font-bold text-2xl text-zinc-900 ml-2">${total.toFixed(2)}</span>
+          Total de la compra: <span className="font-serif font-bold text-2xl text-zinc-900 ml-2">{currency_symbol}{total.toFixed(2)}</span>
         </div>
         <Button type="submit" disabled={isPending} className="w-full md:w-auto bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">
-          {isPending ? 'Guardando...' : 'Guardar compra'}
+          {isPending ? <><Spinner /> Guardando...</> : 'Guardar compra'}
         </Button>
       </div>
     </form>

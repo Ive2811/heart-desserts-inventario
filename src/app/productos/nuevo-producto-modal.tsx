@@ -1,5 +1,7 @@
 'use client'
 
+import { useBusiness } from '@/components/business-provider'
+import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createProduct } from './actions'
@@ -20,6 +22,7 @@ const selectClass =
   'flex h-10 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#B83B5E] disabled:cursor-not-allowed disabled:opacity-50'
 
 export function NuevoProductoModal({ categorias }: { categorias: { id: string; name: string }[] }) {
+  const { currency_symbol } = useBusiness()
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -92,7 +95,7 @@ export function NuevoProductoModal({ categorias }: { categorias: { id: string; n
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sale_price" className="text-zinc-700 font-semibold">Precio de venta ($)</Label>
+            <Label htmlFor="sale_price" className="text-zinc-700 font-semibold">Precio de venta ({currency_symbol})</Label>
             <Input id="sale_price" name="sale_price" type="number" min="0" step="0.01" inputMode="decimal" placeholder="Opcional" className="h-10 focus-visible:ring-[#B83B5E]" />
           </div>
 
@@ -127,7 +130,7 @@ export function NuevoProductoModal({ categorias }: { categorias: { id: string; n
               Cancelar
             </Button>
             <Button type="submit" disabled={loading} className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">
-              {loading ? 'Guardando...' : 'Guardar y definir receta'}
+              {loading ? <><Spinner /> Guardando...</> : 'Guardar y definir receta'}
             </Button>
           </div>
         </form>

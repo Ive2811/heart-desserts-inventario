@@ -1,6 +1,10 @@
+import { getSettings } from '@/lib/settings'
+import { StatusBadge, stockStatus } from '@/components/status-badge'
+import { formatMoney } from '@/lib/business'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
 import { NuevoProductoModal } from './nuevo-producto-modal'
 import {
   Table,
@@ -18,11 +22,12 @@ const FULFILLMENT_LABEL = {
 
 export default async function ProductosPage() {
   const supabase = await createClient()
+  const { currency_symbol } = await getSettings()
 
   const [{ data: productos, error }, { data: costos }, { data: categorias }] = await Promise.all([
     supabase
       .from('products')
-      .select('id, name, sale_price, fulfillment, active, product_categories(name)')
+      .select('id, name, sale_price, fulfillment, current_stock, min_stock, active, product_categories(name)')
       .order('name', { ascending: true }),
     supabase.from('v_product_costing').select('product_id, unit_cost, margin_pct'),
     supabase
@@ -60,9 +65,9 @@ export default async function ProductosPage() {
         </div>
 
         {error && (
-          <p className="text-sm text-red-500 font-medium bg-red-50 p-3 rounded-lg border border-red-100">
+          <Alert variant="error">
             No se pudieron cargar los productos. Intenta recargar la página.
-          </p>
+          </Alert>
         )}
 
         {/* Tabla de Productos */}
@@ -72,6 +77,7 @@ export default async function ProductosPage() {
               <TableRow>
                 <TableHead className="font-semibold text-zinc-700">Producto</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Elaboración</TableHead>
+                <TableHead className="font-semibold text-zinc-700">Estado</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Precio</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Costo receta</TableHead>
                 <TableHead className="text-right font-semibold text-zinc-700">Margen</TableHead>
@@ -93,14 +99,24 @@ export default async function ProductosPage() {
                         </span>
                       </TableCell>
                       <TableCell className="text-sm text-zinc-600">{FULFILLMENT_LABEL[p.fulfillment]}</TableCell>
+                      <TableCell>
+                        {p.fulfillment === 'made_to_stock' ? (
+                          <div className="space-y-1">
+                            <StatusBadge status={stockStatus(p.current_stock, p.min_stock)} />
+                            <span className="block text-xs text-zinc-500">{p.current_stock} en vitrina</span>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-zinc-400">—</span>
+                        )}
+                      </TableCell>
                       <TableCell className="text-sm font-medium text-zinc-900">
-                        {p.sale_price === null ? '—' : `$${Number(p.sale_price).toFixed(2)}`}
+                        {p.sale_price === null ? '—' : formatMoney(Number(p.sale_price), currency_symbol)}
                       </TableCell>
                       <TableCell className="text-sm text-zinc-600">
                         {costo?.unit_cost == null ? (
                           <span className="text-zinc-400 italic">Sin receta</span>
                         ) : (
-                          `$${Number(costo.unit_cost).toFixed(2)}`
+                          formatMoney(Number(costo.unit_cost), currency_symbol)
                         )}
                       </TableCell>
                       <TableCell className="text-right font-semibold text-zinc-900">
@@ -115,7 +131,7 @@ export default async function ProductosPage() {
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-10 text-zinc-500 text-sm">
+                  <TableCell colSpan={6} className="text-center py-10 text-zinc-500 text-sm">
                     Aún no hay productos registrados.
                   </TableCell>
                 </TableRow>

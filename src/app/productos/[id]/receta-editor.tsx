@@ -1,9 +1,12 @@
 'use client'
 
+import { useBusiness } from '@/components/business-provider'
+import { Spinner } from '@/components/ui/spinner'
 import { useRef, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { saveRecipe } from '../actions'
 import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
@@ -26,8 +29,8 @@ const UNIT_LABEL: Record<BaseUnit, string> = { g: 'g', ml: 'ml', unit: 'unidades
 const selectClass =
   'flex h-10 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#B83B5E] disabled:cursor-not-allowed disabled:opacity-50'
 
-function money(value: number, decimals = 2) {
-  return `$${new Intl.NumberFormat('es-SV', {
+function moneyWith(symbol: string, value: number, decimals = 2) {
+  return `${symbol}${new Intl.NumberFormat('es-SV', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(value)}`
@@ -44,6 +47,8 @@ export function RecetaEditor({
   insumos: Insumo[]
   inicial: Inicial | null
 }) {
+  const { currency_symbol } = useBusiness()
+  const money = (value: number, decimals = 2) => moneyWith(currency_symbol, value, decimals)
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
 
@@ -255,18 +260,18 @@ export function RecetaEditor({
           </p>
         )}
         {sinCosto && (
-          <p className="text-sm text-amber-700 bg-amber-50 p-3 rounded-lg border border-amber-100 mt-2">
+          <Alert variant="warning" className="mt-2">
             Algún insumo todavía no tiene costo: registra una compra para que el costo sea real.
-          </p>
+          </Alert>
         )}
       </div>
 
-      {error && <p className="text-sm text-red-500 font-medium bg-red-50 p-3 rounded-lg border border-red-100">{error}</p>}
-      {saved && <p className="text-sm text-emerald-700 font-medium bg-emerald-50 p-3 rounded-lg border border-emerald-100">Receta guardada exitosamente.</p>}
+      {error && <Alert variant="error">{error}</Alert>}
+      {saved && <Alert variant="success">Receta guardada exitosamente.</Alert>}
 
       <div className="flex justify-end border-t border-zinc-100 pt-6">
         <Button type="submit" disabled={isPending} className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">
-          {isPending ? 'Guardando...' : 'Guardar receta'}
+          {isPending ? <><Spinner /> Guardando...</> : 'Guardar receta'}
         </Button>
       </div>
     </form>

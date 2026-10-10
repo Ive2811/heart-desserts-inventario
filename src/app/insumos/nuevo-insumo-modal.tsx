@@ -1,5 +1,6 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { createIngredient } from './actions'
 import { Button } from '@/components/ui/button'
@@ -77,7 +78,7 @@ export function NuevoInsumoModal() {
         <form onSubmit={handleSubmit} className="space-y-5 mt-4" noValidate>
           <div className="space-y-2">
             <Label htmlFor="name" className="text-zinc-700 font-semibold">Nombre del insumo</Label>
-            <Input id="name" name="name" placeholder="ej. Queso Crema" className="h-10 focus-visible:ring-[#B83B5E]" />
+            <Input id="name" name="name" placeholder="ej. queso crema" className="h-10 focus-visible:ring-[#B83B5E]" />
           </div>
 
           <div className="space-y-2">
@@ -90,7 +91,7 @@ export function NuevoInsumoModal() {
               <option value="">Selecciona la unidad</option>
               <option value="g">Gramos (g)</option>
               <option value="ml">Mililitros (ml)</option>
-              <option value="unit">Unidades (unit)</option>
+              <option value="unit">Unidades (unid)</option>
             </select>
           </div>
 
@@ -108,16 +109,21 @@ export function NuevoInsumoModal() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="min_stock" className="text-zinc-700 font-semibold">Stock Mínimo de Alerta</Label>
-            <Input defaultValue="0" id="min_stock" name="min_stock" step="0.001" type="number" className="h-10 focus-visible:ring-[#B83B5E]" />
+            <Label htmlFor="min_stock" className="text-zinc-700 font-semibold">Stock mínimo de alerta</Label>
+            <Input defaultValue="0" id="min_stock" name="min_stock" min="0" step="0.001" type="number" className="h-10 focus-visible:ring-[#B83B5E]" />
           </div>
+
+          <label className="flex items-center gap-2.5 text-sm text-zinc-700 cursor-pointer select-none">
+            <input type="checkbox" name="is_perishable" className="accent-[#B83B5E] w-4 h-4 rounded border-zinc-300 cursor-pointer" />
+            <span>Es perecedero (pedir fecha de vencimiento al comprarlo)</span>
+          </label>
 
           <div className="flex justify-end gap-3 pt-6 border-t border-zinc-100">
             <Button type="button" variant="outline" onClick={() => setOpen(false)} className="hover:bg-zinc-50 transition-colors">
               Cancelar
             </Button>
             <Button type="submit" disabled={loading} className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">
-              {loading ? 'Guardando...' : 'Guardar Insumo'}
+              {loading ? <><Spinner /> Guardando...</> : 'Guardar insumo'}
             </Button>
           </div>
         </form>

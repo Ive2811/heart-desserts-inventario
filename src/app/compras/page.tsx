@@ -1,6 +1,9 @@
+import { getSettings } from '@/lib/settings'
+import { formatMoney } from '@/lib/business'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
 import {
   Table,
   TableBody,
@@ -18,6 +21,7 @@ function formatDate(value: string) {
 
 export default async function ComprasPage() {
   const supabase = await createClient()
+  const { currency_symbol } = await getSettings()
 
   const { data: compras, error } = await supabase
     .from('purchases')
@@ -41,7 +45,7 @@ export default async function ComprasPage() {
           </div>
           <div className="flex gap-3">
             <Link href="/">
-              <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Volver al Panel</Button>
+              <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Volver al panel</Button>
             </Link>
             <Link href="/compras/nueva">
               <Button className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors border-none">Nueva compra</Button>
@@ -50,9 +54,9 @@ export default async function ComprasPage() {
         </div>
 
         {error && (
-          <p className="text-sm text-red-500 font-medium bg-red-50 p-3 rounded-lg border border-red-100">
+          <Alert variant="error">
             No se pudieron cargar las compras. Intenta recargar la página.
-          </p>
+          </Alert>
         )}
 
         {/* Tabla de Compras */}
@@ -73,7 +77,7 @@ export default async function ComprasPage() {
                     <TableCell className="font-medium text-zinc-900">{formatDate(compra.purchased_on)}</TableCell>
                     <TableCell className="text-sm text-zinc-600">{compra.suppliers?.name ?? 'Sin proveedor'}</TableCell>
                     <TableCell className="text-sm text-zinc-600">{compra.invoice_number ?? '—'}</TableCell>
-                    <TableCell className="text-right font-semibold text-zinc-900">${Number(compra.total).toFixed(2)}</TableCell>
+                    <TableCell className="text-right font-semibold text-zinc-900">{formatMoney(Number(compra.total), currency_symbol)}</TableCell>
                   </TableRow>
                 ))
               ) : (

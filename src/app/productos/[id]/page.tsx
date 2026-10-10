@@ -57,7 +57,7 @@ export default async function ProductoPage({ params }: { params: Promise<{ id: s
           <div className="border border-zinc-200 rounded-2xl bg-white shadow-sm p-8 text-center space-y-3">
             <p className="text-zinc-500 text-sm">Primero registra tus insumos para poder armar la receta.</p>
             <Link href="/insumos">
-              <Button className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">Ir a Insumos</Button>
+              <Button className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">Ir a insumos</Button>
             </Link>
           </div>
         ) : (

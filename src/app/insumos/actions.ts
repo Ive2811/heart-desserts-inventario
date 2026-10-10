@@ -13,6 +13,7 @@ export async function createIngredient(formData: FormData) {
   const purchase_unit_raw = String(formData.get('purchase_unit') ?? '').trim()
   const conversion_raw = String(formData.get('conversion_factor') ?? '').trim()
   const conversion_factor = conversion_raw === '' ? 1 : Number(conversion_raw)
+  const is_perishable = formData.get('is_perishable') === 'on'
 
   if (!name) return { error: 'Escribe el nombre del insumo' }
   if (!UNITS.includes(base_unit)) return { error: 'Unidad no válida' }
@@ -34,6 +35,7 @@ export async function createIngredient(formData: FormData) {
       min_stock,
       purchase_unit,
       conversion_factor: purchase_unit_raw ? conversion_factor : 1,
+      is_perishable,
     },
   ])
 
