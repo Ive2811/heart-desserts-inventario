@@ -1,8 +1,11 @@
+import { ReportHeader } from '@/components/report-header'
+import { requireOwner } from '@/lib/auth-utils'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { DownloadButton } from '../download-button'
+import { MOVEMENT_LABEL, REASON_LABEL, UNIT_LABEL } from '@/lib/labels'
 
 function formatDateTime(value: string) {
   const date = new Date(value)
@@ -10,6 +13,7 @@ function formatDateTime(value: string) {
 }
 
 export default async function KardexPage() {
+  await requireOwner()
   const supabase = await createClient()
 
   const { data: movimientos } = await supabase
@@ -22,14 +26,16 @@ export default async function KardexPage() {
     <div className="min-h-screen bg-[#FDFBF7] w-full print:bg-white">
       <div className="max-w-5xl mx-auto p-6 md:p-10 pb-28 space-y-6">
         
+        <ReportHeader title="Kardex de materia prima" subtitle="Movimientos de inventario de insumos" />
+
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 print:hidden">
           <div>
-            <h1 className="text-3xl font-serif font-bold text-zinc-900">Kardex de Materia Prima</h1>
+            <h1 className="text-3xl font-serif font-bold text-zinc-900">Kardex de materia prima</h1>
             <p className="text-sm text-zinc-500 mt-1">Auditoría en tiempo real de entradas y salidas de insumos.</p>
           </div>
           <div className="flex gap-3">
             <Link href="/reportes">
-              <Button variant="outline" className="bg-white">Volver a Reportes</Button>
+              <Button variant="outline" className="bg-white">Volver a reportes</Button>
             </Link>
             <DownloadButton />
           </div>
@@ -39,24 +45,24 @@ export default async function KardexPage() {
           <Table>
             <TableHeader className="bg-zinc-50/50">
               <TableRow>
-                <TableHead className="font-semibold text-zinc-700">Fecha y Hora</TableHead>
+                <TableHead className="font-semibold text-zinc-700">Fecha y hora</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Insumo</TableHead>
-                <TableHead className="font-semibold text-zinc-700">Tipo de Movimiento</TableHead>
+                <TableHead className="font-semibold text-zinc-700">Tipo de movimiento</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Cantidad</TableHead>
-                <TableHead className="text-right font-semibold text-zinc-700">Motivo / Nota</TableHead>
+                <TableHead className="text-right font-semibold text-zinc-700">Motivo / nota</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {movimientos && movimientos.length > 0 ? (
-                movimientos.map((m: any) => (
+                movimientos.map((m) => (
                   <TableRow key={m.id} className="hover:bg-zinc-50/50">
                     <TableCell className="text-sm text-zinc-900">{formatDateTime(m.created_at)}</TableCell>
                     <TableCell className="font-medium text-zinc-900">{m.ingredients?.name}</TableCell>
-                    <TableCell className="text-sm uppercase font-semibold text-zinc-600">{m.type}</TableCell>
+                    <TableCell className="text-sm font-semibold text-zinc-600">{MOVEMENT_LABEL[m.type] ?? m.type}</TableCell>
                     <TableCell className={`text-sm font-bold ${Number(m.quantity) > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
-                      {Number(m.quantity) > 0 ? `+${m.quantity}` : m.quantity} {m.ingredients?.base_unit}
+                      {Number(m.quantity) > 0 ? `+${m.quantity}` : m.quantity} {m.ingredients ? UNIT_LABEL[m.ingredients.base_unit] : ''}
                     </TableCell>
-                    <TableCell className="text-right text-sm text-zinc-500">{m.reason || m.note || '—'}</TableCell>
+                    <TableCell className="text-right text-sm text-zinc-500">{(m.reason && REASON_LABEL[m.reason]) || m.reason || m.note || '—'}</TableCell>
                   </TableRow>
                 ))
               ) : (

@@ -1,11 +1,13 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { createNewUser } from './actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import { MODULOS } from '@/lib/modules'
 import {
   Dialog,
   DialogContent,
@@ -14,17 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-
-const MODULOS = [
-  { id: 'ventas', label: 'Ventas y Caja', desc: 'Registrar ventas y consultar transacciones' },
-  { id: 'compras', label: 'Compras', desc: 'Registrar compras a proveedores y facturas' },
-  { id: 'insumos', label: 'Catálogo de Insumos', desc: 'Ver y agregar materias primas' },
-  { id: 'productos', label: 'Productos y Recetas', desc: 'Gestionar postres, precios y costos' },
-  { id: 'produccion', label: 'Producción de Tandas', desc: 'Hornear lotes y actualizar vitrina' },
-  { id: 'merma', label: 'Pérdidas y Descartes', desc: 'Registrar insumos vencidos o dañados' },
-  { id: 'proveedores', label: 'Proveedores', desc: 'Gestionar contactos de proveedores' },
-  { id: 'usuarios', label: 'Usuarios y Permisos', desc: 'Control total de accesos del personal' },
-]
 
 const selectClass =
   'flex h-10 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#B83B5E]'
@@ -105,11 +96,11 @@ export function NuevoUsuarioModal() {
         <form onSubmit={handleSubmit} className="space-y-6 mt-4" noValidate>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-zinc-50 p-4 rounded-xl border border-zinc-100">
             <div className="space-y-2">
-              <Label htmlFor="full_name" className="text-zinc-700 font-semibold text-xs">Nombre Completo</Label>
+              <Label htmlFor="full_name" className="text-zinc-700 font-semibold text-xs">Nombre completo</Label>
               <Input id="full_name" name="full_name" placeholder="ej. Ana Pérez" className="h-9 bg-white" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-zinc-700 font-semibold text-xs">Usuario (Login)</Label>
+              <Label htmlFor="username" className="text-zinc-700 font-semibold text-xs">Usuario (login)</Label>
               <Input id="username" name="username" placeholder="ej. ana, mostrador1" required className="h-9 bg-white" autoComplete="off" />
             </div>
             <div className="space-y-2">
@@ -119,7 +110,7 @@ export function NuevoUsuarioModal() {
             <div className="space-y-2">
               <Label htmlFor="role" className="text-zinc-700 font-semibold text-xs">Rol en el sistema</Label>
               <select id="role" name="role" className={selectClass} value={role} onChange={handleRoleChange}>
-                <option value="staff">Empleado (Staff)</option>
+                <option value="staff">Empleado</option>
                 <option value="owner">Administrador</option>
               </select>
             </div>
@@ -157,7 +148,7 @@ export function NuevoUsuarioModal() {
               Cancelar
             </Button>
             <Button type="submit" disabled={loading} className="bg-[#B83B5E] text-white hover:bg-rose-800">
-              {loading ? 'Creando...' : 'Crear usuario'}
+              {loading ? <><Spinner /> Creando...</> : 'Crear usuario'}
             </Button>
           </div>
         </form>

@@ -1,11 +1,14 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { updateUserPermissions } from './actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import { MODULOS } from '@/lib/modules'
+import type { Tables } from '@/types/database'
 import {
   Dialog,
   DialogContent,
@@ -15,22 +18,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-const MODULOS = [
-  { id: 'ventas', label: 'Ventas y Caja', desc: 'Registrar ventas y consultar transacciones' },
-  { id: 'compras', label: 'Compras', desc: 'Registrar compras a proveedores y facturas' },
-  { id: 'insumos', label: 'Catálogo de Insumos', desc: 'Ver y agregar materias primas' },
-  { id: 'productos', label: 'Productos y Recetas', desc: 'Gestionar postres, precios y costos' },
-  { id: 'produccion', label: 'Producción de Tandas', desc: 'Hornear lotes y actualizar vitrina' },
-  { id: 'merma', label: 'Pérdidas y Descartes', desc: 'Registrar insumos vencidos o dañados' },
-  { id: 'proveedores', label: 'Proveedores', desc: 'Gestionar contactos de proveedores' },
-  { id: 'usuarios', label: 'Usuarios y Permisos', desc: 'Control total de accesos del personal' },
-]
-
-export function EditarUsuarioModal({ user }: { user: any }) {
+export function EditarUsuarioModal({ user }: { user: Tables<'profiles'> }) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   
-  const [role, setRole] = useState(user.role || 'staff')
+  const [role, setRole] = useState<string>(user.role || 'staff')
   const [permissions, setPermissions] = useState<string[]>(user.permissions || [])
 
   const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -86,13 +78,13 @@ export function EditarUsuarioModal({ user }: { user: any }) {
           {/* Datos Generales */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-zinc-50 p-4 rounded-xl border border-zinc-100">
             <div className="space-y-2">
-              <Label className="text-zinc-700 font-semibold text-xs">Nombre Completo</Label>
+              <Label className="text-zinc-700 font-semibold text-xs">Nombre completo</Label>
               <Input name="full_name" defaultValue={user.full_name || ''} className="h-9 bg-white" />
             </div>
             <div className="space-y-2">
               <Label className="text-zinc-700 font-semibold text-xs">Rol en el sistema</Label>
               <select name="role" value={role} onChange={handleRoleChange} className="flex h-9 w-full rounded-md border border-zinc-200 bg-white px-3 py-1 text-sm shadow-sm">
-                <option value="staff">Empleado (Staff)</option>
+                <option value="staff">Empleado</option>
                 <option value="owner">Administrador</option>
               </select>
             </div>
@@ -130,7 +122,7 @@ export function EditarUsuarioModal({ user }: { user: any }) {
               Cancelar
             </Button>
             <Button type="submit" disabled={loading} className="bg-[#B83B5E] text-white hover:bg-rose-800">
-              {loading ? 'Guardando...' : 'Guardar cambios'}
+              {loading ? <><Spinner /> Guardando...</> : 'Guardar cambios'}
             </Button>
           </div>
         </form>

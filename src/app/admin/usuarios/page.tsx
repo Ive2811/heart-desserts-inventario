@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
 import {
   Table,
   TableBody,
@@ -47,16 +48,16 @@ export default async function AdminUsuariosPage() {
           </div>
           <div className="flex gap-3">
             <Link href="/">
-              <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Volver al Panel</Button>
+              <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Volver al panel</Button>
             </Link>
             <NuevoUsuarioModal />
           </div>
         </div>
 
         {error && (
-          <p className="text-sm text-red-500 font-medium bg-red-50 p-3 rounded-lg border border-red-100">
+          <Alert variant="error">
             No se pudieron cargar los usuarios.
-          </p>
+          </Alert>
         )}
 
         {/* Tabla de Usuarios */}
@@ -64,8 +65,8 @@ export default async function AdminUsuariosPage() {
           <Table>
             <TableHeader className="bg-zinc-50/50">
               <TableRow>
-                <TableHead className="font-semibold text-zinc-700">ID de Usuario</TableHead>
-                <TableHead className="font-semibold text-zinc-700">Nombre / Perfil</TableHead>
+                <TableHead className="font-semibold text-zinc-700">ID de usuario</TableHead>
+                <TableHead className="font-semibold text-zinc-700">Nombre / perfil</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Rol</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Estado</TableHead>
                 <TableHead className="text-right font-semibold text-zinc-700">Acciones</TableHead>
@@ -83,7 +84,7 @@ export default async function AdminUsuariosPage() {
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
                         p.role === 'owner' ? 'bg-rose-100 text-rose-800' : 'bg-zinc-100 text-zinc-800'
                       }`}>
-                        {p.role === 'owner' ? 'Administrador' : 'Empleado (Staff)'}
+                        {p.role === 'owner' ? 'Administrador' : 'Empleado'}
                       </span>
                     </TableCell>
                     <TableCell>
