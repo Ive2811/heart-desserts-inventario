@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { ConfirmProvider } from "@/components/confirm-dialog";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +26,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#FDFBF7]">
-        <div className="flex-1">
-          {children}
-        </div>
+        <ConfirmProvider>
+          <div className="flex-1">{children}</div>
+        </ConfirmProvider>
         
         {/* Footer Global */}
         <footer className="py-6 text-center text-xs text-zinc-400 border-t border-zinc-200/60 mt-auto bg-[#FDFBF7]">

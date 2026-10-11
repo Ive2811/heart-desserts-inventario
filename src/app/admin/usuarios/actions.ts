@@ -51,7 +51,8 @@ export async function updateUserPermissions(formData: FormData) {
     authUpdates.email = `${username.toLowerCase().trim()}@heartdesserts.local`
   }
 
-  if (password && password.length >= 6) {
+  if (password) {
+    if (password.length < 8) return { error: 'La contraseña debe tener al menos 8 caracteres' }
     authUpdates.password = password
   }
 
@@ -133,7 +134,7 @@ export async function createNewUser(formData: FormData) {
   if (!username || !password) {
     return { error: 'El usuario y la contraseña son obligatorios' }
   }
-  if (password.length < 6) return { error: 'La contraseña debe tener al menos 6 caracteres' }
+  if (password.length < 8) return { error: 'La contraseña debe tener al menos 8 caracteres' }
   if (!/^[a-z0-9._-]+$/i.test(username)) {
     return { error: 'El usuario solo puede tener letras, números, punto, guion y guion bajo' }
   }

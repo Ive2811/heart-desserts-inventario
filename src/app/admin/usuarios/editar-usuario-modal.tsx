@@ -88,6 +88,19 @@ export function EditarUsuarioModal({ user }: { user: Tables<'profiles'> }) {
                 <option value="owner">Administrador</option>
               </select>
             </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor={`pw-${user.id}`} className="text-zinc-700 font-semibold text-xs">Nueva contraseña (opcional)</Label>
+              <Input
+                id={`pw-${user.id}`}
+                name="password"
+                type="password"
+                autoComplete="new-password"
+                minLength={8}
+                placeholder="Déjala vacía para no cambiarla"
+                className="h-9 bg-white"
+              />
+              <p className="text-xs text-zinc-500">Mínimo 8 caracteres. La persona deberá usarla la próxima vez que inicie sesión.</p>
+            </div>
           </div>
 
           {/* Cuadrícula de Permisos por Módulo */}

@@ -6,6 +6,8 @@ import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { Alert } from '@/components/ui/alert'
 import { NuevoProductoModal } from './nuevo-producto-modal'
+import { EditarProducto } from './editar-producto'
+import { checkIsOwner } from '@/lib/auth-utils'
 import {
   Table,
   TableBody,
@@ -23,11 +25,12 @@ const FULFILLMENT_LABEL = {
 export default async function ProductosPage() {
   const supabase = await createClient()
   const { currency_symbol } = await getSettings()
+  const isOwner = await checkIsOwner()
 
   const [{ data: productos, error }, { data: costos }, { data: categorias }] = await Promise.all([
     supabase
       .from('products')
-      .select('id, name, sale_price, fulfillment, current_stock, min_stock, active, product_categories(name)')
+      .select('id, name, category_id, sale_price, fulfillment, current_stock, min_stock, active, product_categories(name)')
       .order('name', { ascending: true }),
     supabase.from('v_product_costing').select('product_id, unit_cost, margin_pct'),
     supabase
@@ -81,6 +84,7 @@ export default async function ProductosPage() {
                 <TableHead className="font-semibold text-zinc-700">Precio</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Costo receta</TableHead>
                 <TableHead className="text-right font-semibold text-zinc-700">Margen</TableHead>
+                {isOwner && <TableHead className="text-right font-semibold text-zinc-700"><span className="sr-only">Acciones</span></TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -126,12 +130,28 @@ export default async function ProductosPage() {
                           </span>
                         )}
                       </TableCell>
+                      {isOwner && (
+                        <TableCell className="text-right">
+                          <EditarProducto
+                            categorias={categorias ?? []}
+                            producto={{
+                              id: p.id,
+                              name: p.name,
+                              category_id: p.category_id,
+                              sale_price: p.sale_price === null ? null : Number(p.sale_price),
+                              min_stock: p.min_stock,
+                              active: p.active,
+                              porTanda: p.fulfillment === 'made_to_stock',
+                            }}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   )
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-10 text-zinc-500 text-sm">
+                  <TableCell colSpan={7} className="text-center py-10 text-zinc-500 text-sm">
                     Aún no hay productos registrados.
                   </TableCell>
                 </TableRow>

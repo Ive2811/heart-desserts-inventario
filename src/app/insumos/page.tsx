@@ -1,6 +1,7 @@
 import { getSettings } from '@/lib/settings'
 import { formatMoney } from '@/lib/business'
 import { NuevoInsumoModal } from './nuevo-insumo-modal'
+import { EditarInsumo } from './editar-insumo'
 import { createClient } from '@/lib/supabase/server'
 import { checkIsOwner } from '@/lib/auth-utils'
 import { UNIT_LABEL } from '@/lib/labels'
@@ -56,6 +57,9 @@ export default async function InsumosPage() {
             <Link href="/">
               <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Volver al panel</Button>
             </Link>
+            <Link href="/inventario-fisico">
+              <Button variant="outline" className="bg-white hover:bg-zinc-50 transition-colors">Inventario físico</Button>
+            </Link>
             {isOwner && <NuevoInsumoModal />}
           </div>
         </div>
@@ -76,6 +80,7 @@ export default async function InsumosPage() {
                 <TableHead className="font-semibold text-zinc-700">Costo promedio</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Estado</TableHead>
                 <TableHead className="text-right font-semibold text-zinc-700">Stock actual</TableHead>
+                {isOwner && <TableHead className="text-right font-semibold text-zinc-700"><span className="sr-only">Acciones</span></TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -104,11 +109,26 @@ export default async function InsumosPage() {
                         <span className="block text-xs font-normal text-zinc-500">mín. {Number(insumo.min_stock)}</span>
                       )}
                     </TableCell>
+                    {isOwner && (
+                      <TableCell className="text-right">
+                        <EditarInsumo
+                          insumo={{
+                            id: insumo.id,
+                            name: insumo.name,
+                            min_stock: Number(insumo.min_stock),
+                            purchase_unit: insumo.purchase_unit,
+                            conversion_factor: Number(insumo.conversion_factor),
+                            is_perishable: insumo.is_perishable,
+                            active: insumo.active,
+                          }}
+                        />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-10 text-zinc-500 text-sm">
+                  <TableCell colSpan={6} className="text-center py-10 text-zinc-500 text-sm">
                     No hay insumos registrados en la base de datos.
                   </TableCell>
                 </TableRow>

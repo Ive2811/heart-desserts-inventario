@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { NuevoProveedorModal } from './nuevo-proveedor-modal'
+import { EditarProveedor } from './editar-proveedor'
+import { checkIsOwner } from '@/lib/auth-utils'
 import {
   Table,
   TableBody,
@@ -13,6 +15,7 @@ import {
 
 export default async function ProveedoresPage() {
   const supabase = await createClient()
+  const isOwner = await checkIsOwner()
 
   const { data: proveedores, error } = await supabase
     .from('suppliers')
@@ -54,6 +57,7 @@ export default async function ProveedoresPage() {
                 <TableHead className="font-semibold text-zinc-700">Nombre</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Teléfono</TableHead>
                 <TableHead className="font-semibold text-zinc-700">Nota</TableHead>
+                {isOwner && <TableHead className="text-right font-semibold text-zinc-700"><span className="sr-only">Acciones</span></TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -66,11 +70,16 @@ export default async function ProveedoresPage() {
                     </TableCell>
                     <TableCell className="text-sm text-zinc-600">{p.phone ?? '—'}</TableCell>
                     <TableCell className="text-sm text-zinc-600">{p.notes ?? '—'}</TableCell>
+                    {isOwner && (
+                      <TableCell className="text-right">
+                        <EditarProveedor proveedor={{ id: p.id, name: p.name, phone: p.phone, notes: p.notes, active: p.active }} />
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center py-10 text-zinc-500 text-sm">
+                  <TableCell colSpan={4} className="text-center py-10 text-zinc-500 text-sm">
                     Aún no hay proveedores registrados.
                   </TableCell>
                 </TableRow>

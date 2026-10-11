@@ -34,6 +34,7 @@ export const RUTA_A_MODULO: ReadonlyArray<readonly [string, string]> = [
   ['/caja', 'caja'],
   ['/compras', 'compras'],
   ['/insumos', 'insumos'],
+  ['/inventario-fisico', 'insumos'],
   ['/productos', 'productos'],
   ['/produccion', 'produccion'],
   ['/merma', 'merma'],

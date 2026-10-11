@@ -128,3 +128,24 @@
     @apply font-sans;
   }
 }
+/* ---------- Animaciones suaves ---------- */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.animate-page-in { animation: page-in 0.35s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-page-in { animation: none; }
+}
+
+/* ---------- Impresión / PDF: sin menús ni botones, con tablas ordenadas ---------- */
+@media print {
+  @page { margin: 14mm; }
+  html, body { background: #fff !important; }
+  [data-sonner-toaster] { display: none !important; }
+  table { width: 100%; border-collapse: collapse; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  * { box-shadow: none !important; }
+}

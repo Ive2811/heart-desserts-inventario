@@ -1,8 +1,10 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { createSupplier } from './actions'
 import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -42,14 +44,14 @@ export function NuevoProveedorModal() {
       {/* Botón que abre el modal (Corregido para evitar el error de TypeScript) */}
       <DialogTrigger render={
         <Button className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors shadow-sm border-none">
-          Agregar Proveedor
+          Agregar proveedor
         </Button>
       } />
       
       {/* Contenido del Modal */}
       <DialogContent className="sm:max-w-[425px] rounded-2xl bg-white border border-zinc-200 p-6 shadow-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-serif font-bold text-zinc-900">Registrar Nuevo Proveedor</DialogTitle>
+          <DialogTitle className="text-2xl font-serif font-bold text-zinc-900">Registrar nuevo proveedor</DialogTitle>
           <DialogDescription className="text-zinc-500 mt-1">
             Podrás elegirlo al registrar tus compras.
           </DialogDescription>
@@ -70,9 +72,9 @@ export function NuevoProveedorModal() {
           </div>
 
           {error && (
-            <p className="text-sm text-red-500 font-medium bg-red-50 p-3 rounded-lg border border-red-100">
+            <Alert variant="error">
               {error}
-            </p>
+            </Alert>
           )}
 
           <div className="flex justify-end gap-3 pt-6 border-t border-zinc-100">
@@ -80,7 +82,7 @@ export function NuevoProveedorModal() {
               Cancelar
             </Button>
             <Button type="submit" disabled={loading} className="bg-[#B83B5E] text-white hover:bg-rose-800 transition-colors">
-              {loading ? 'Guardando...' : 'Guardar Proveedor'}
+              {loading ? <><Spinner /> Guardando...</> : 'Guardar proveedor'}
             </Button>
           </div>
         </form>

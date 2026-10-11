@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { StatusBadge } from '@/components/status-badge'
+import { useConfirm } from '@/components/confirm-dialog'
 
 type Item = { id: string; label: string; active: boolean }
 type Result = { error?: string; success?: true }
@@ -32,6 +33,7 @@ export function CatalogManager({
   remove: (id: string) => Promise<Result>
 }) {
   const router = useRouter()
+  const confirmar = useConfirm()
   const [isPending, startTransition] = useTransition()
   const [nuevo, setNuevo] = useState('')
   const [editando, setEditando] = useState<string | null>(null)
@@ -116,10 +118,14 @@ export function CatalogManager({
                     variant="ghost"
                     disabled={isPending}
                     className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                    onClick={() => {
-                      if (window.confirm(`¿Borrar "${item.label}"? Si ya se usó en ventas o productos, mejor desactívalo.`)) {
-                        ejecutar(() => remove(item.id), 'Borrado')
-                      }
+                    onClick={async () => {
+                      const ok = await confirmar({
+                        title: `Borrar "${item.label}"`,
+                        description: 'Si ya se usó en ventas o productos no se podrá borrar: en ese caso desactívalo.',
+                        confirmText: 'Borrar',
+                        tone: 'danger',
+                      })
+                      if (ok) ejecutar(() => remove(item.id), 'Borrado')
                     }}
                     title="Borrar"
                   >

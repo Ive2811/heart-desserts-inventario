@@ -233,6 +233,15 @@ export default async function DashboardPage() {
                     </div>
                   </Link>
                 )}
+                {puede('ventas') && (
+                  <Link href="/ventas" className={tarjetaCatalogo}>
+                    <div className={iconoCatalogo}><FileText className="w-5 h-5" /></div>
+                    <div>
+                      <p className="font-semibold text-zinc-900 text-sm">Ventas del día</p>
+                      <p className="text-xs text-zinc-500">Detalle, anulaciones y caja</p>
+                    </div>
+                  </Link>
+                )}
                 {puede('proveedores') && (
                   <Link href="/proveedores" className={tarjetaCatalogo}>
                     <div className={iconoCatalogo}><Users className="w-5 h-5" /></div>

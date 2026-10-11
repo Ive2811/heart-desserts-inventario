@@ -421,6 +421,26 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"wastage_logs": {
+                  Row: {
+                    "cost_lost": number,"created_at": string,"created_by": string,"id": string,"ingredient_id": string,"note": string | null,"quantity": number,"reason_code": Database["public"]['Enums']['waste_reason']
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "cost_lost"?: number,"created_at"?: string,"created_by"?: string,"id"?: string,"ingredient_id": string,"note"?: string | null,"quantity": number,"reason_code": Database["public"]['Enums']['waste_reason']
+                  }
+                  Update: {
+                    "cost_lost"?: number,"created_at"?: string,"created_by"?: string,"id"?: string,"ingredient_id"?: string,"note"?: string | null,"quantity"?: number,"reason_code"?: Database["public"]['Enums']['waste_reason']
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "wastage_logs_ingredient_id_fkey"
+      columns: ["ingredient_id"]
+isOneToOne: false
+      referencedRelation: "ingredients"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"sale_channels": {
                   Row: {
                     "active": boolean,"code": string,"created_at": string,"label": string,"sort_order": number,"updated_at": string
@@ -517,10 +537,19 @@ isOneToOne: false
                            },
 "register_cash_closing":
 { Args: { "p_cash_counted": number,"p_date": string,"p_note"?: string,"p_opening_float": number }; Returns: string
+                           },
+"reopen_cash_day":
+{ Args: { "p_date": string,"p_reason": string }; Returns: undefined
+                           },
+"apply_physical_count":
+{ Args: { "p_items": Json,"p_note"?: string }; Returns: number
+                           },
+"is_day_closed":
+{ Args: { "p_date": string }; Returns: boolean
                            }
           }
           Enums: {
-            "base_unit": "g"|"ml"|"unit","fulfillment_mode": "made_to_stock"|"made_to_order","invoice_type": "ticket"|"fcf"|"ccf"|"export","movement_type": "purchase"|"production"|"sale"|"waste"|"adjustment"|"reversal","sale_status": "completed"|"cancelled","user_role": "owner"|"staff"
+            "base_unit": "g"|"ml"|"unit","fulfillment_mode": "made_to_stock"|"made_to_order","invoice_type": "ticket"|"fcf"|"ccf"|"export","movement_type": "purchase"|"production"|"sale"|"waste"|"adjustment"|"reversal","sale_status": "completed"|"cancelled","user_role": "owner"|"staff","waste_reason": "expired"|"prep_error"|"dropped"|"spoiled"|"other"
           }
           CompositeTypes: {
             [_ in never]: never
